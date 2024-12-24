@@ -6,7 +6,8 @@ function LandingPage() {
     <div className="w-full h-screen bg-green-200 text-black pt-1">
      
       <div className="textstructure mt-59 px-20">
-        {["We Create", "Eye Opening", "Appealing Trips", "For Our Customers"].map((item, index) => {
+        {["Travel Farther,", " Live Fuller", " With ASHRA"].map((item, index) => {
+           
           return (
             <div className="masker">
                 <div className="w-fit flex items-center">

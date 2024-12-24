@@ -1,13 +1,32 @@
-import React from 'react'
+import { motion } from 'framer-motion';
+import React from 'react';
 
 function Marquee() {
   return (
-    <div className="w-full py-10 bg-green-900">
-        <div className="text border-t-2 border-b-2 border-zinc-300 flex whitespace-nowrap"> </div>
-        <h1 className="text-[10vw] leading-none "> We are ASHRA</h1>
-        <h1 className="text-[10vw] leading-none "> We are ASHRA</h1>
+    <div className="w-full py-20 rounded-3xl bg-green-800 overflow-hidden">
+     
+      <motion.div
+        initial={{ x: "100%" }}
+        animate={{ x: "-100%" }}
+        transition={{ ease: "linear", repeat: Infinity, duration: 15 }} 
+        className="flex gap-10 whitespace-nowrap"
+      >
+      
+        <h1 className="text-[8vw] leading-none font-['Founders_Grotesk'] uppercase font-semibold text-white">
+          We are ASHRA
+        </h1>
+        <h1 className="text-[8vw] leading-none font-['Founders_Grotesk'] uppercase font-semibold text-white">
+          We are ASHRA
+        </h1>
+        <h1 className="text-[8vw] leading-none font-['Founders_Grotesk'] uppercase font-semibold text-white">
+          We are ASHRA
+        </h1>
+        <h1 className="text-[8vw] leading-none font-['Founders_Grotesk'] uppercase font-semibold text-white">
+          We are ASHRA
+        </h1>
+      </motion.div>
     </div>
-  )
+  );
 }
 
-export default Marquee
+export default Marquee;
