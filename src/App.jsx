@@ -1,8 +1,14 @@
-import React from 'react'
+import React from 'react';
+import Navbar from './components/navbar';
+
 
 function App() {
   return (
-    <div>App</div>
+    <div className='w-full h-screen bg-zinc-900 text-white'>
+  
+      <Navbar />
+    </div>
+    
   )
 }
 
