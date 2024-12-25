@@ -1,9 +1,11 @@
 import React from 'react';
+import {motion} from "framer-motion";
 import { FaArrowUpLong } from "react-icons/fa6";
 
 function LandingPage() {
+
   return (
-    <div className="w-full h-screen bg-green-200 text-black pt-1">
+    <div data-scroll data-scroll-section data-scroll-speed="-.3" className="w-full h-screen bg-green-200 text-black pt-1">
      
       <div className="textstructure mt-59 px-20">
         {["Travel Farther,", " Live Fuller", " With ASHRA"].map((item, index) => {
@@ -11,7 +13,8 @@ function LandingPage() {
           return (
             <div className="masker">
                 <div className="w-fit flex items-center">
-                    {index === 1&& (<div className="w-[9vw] h-[5vw]  bg-red-500"></div>)}
+                    {index === 1&& (
+                      <motion.div initial={{width: 0}} animate={{width: "9vw"}} transition={{ease: [0.76, 0, 0.24, 1], duration: 1}} className="w-[9vw] h-[5vw]  bg-red-500"></motion.div>)}
                 
                  <h1 className="uppercase text-[7.5vw] leading-[6vw] tracking-tighter font-['Founders_Grotesk'] font-medium">
                 {item}
