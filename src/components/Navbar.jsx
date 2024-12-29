@@ -1,17 +1,24 @@
 import React from 'react';
 
-function navbar() {
+function Navbar() {
   return (
-    <div className="w-full px-20 py-8 font-['Neue Montreal'] flex justify-between items-center">
-        <div className="logo"> 
-        <img src="logo.png" height="200px" width="150px"></img>
-        </div>
-        <div className="links flex gap-10"> 
-            {["Services", "Our Work", "About Us", "Insights", "Contact"].map((item, index) => (
-                <a key={index} className={'text-lg capitalize font-light ${index === 4 && "ml-32"}'}>{item}</a> ))}
+    <div style={{ width: '100%', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontFamily: "'Neue Montreal', sans-serif" }}>
+      <div className="logo">
+        <img src="logo.png" alt="Logo" style={{ height: '70px', width: '150px' }} />
+      </div>
+      <div style={{ display: 'flex', gap: '10px' }}>
+        {["Booking", "Our Work", "About Us", "Insights", "Contact"].map((item, index) => (
+          <a
+            key={index}
+            href={item === "Booking" ? "login.html" : "index.html"}
+           
+          >
+            {item}
+          </a>
+        ))}
+      </div>
     </div>
-  </div>
   );
 }
 
-export default navbar;
+export default Navbar;
