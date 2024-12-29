@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Package</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom right, #89dfa0, #3ba514);
+        }
+
+       
+        .sidebar {
+            width: 250px;
+            height: 100%;
+            background-color: #115521;
+            color: white;
+            padding: 20px;
+            box-sizing: border-box;
+            position: fixed;
+            left: -250px; 
+            top: 0;
+            transition: left 0.5s ease;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            display: block;
+            transition: background 0.3s, transform 0.3s;
+        }
+
+        .sidebar a:hover {
+            background-color: #14863e;
+            transform: scale(1.1);
+        }
+
+        .sidebar-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: #0c7023;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background 0.3s;
+            z-index: 1000;
+        }
+
+        .sidebar-toggle:hover {
+            background-color: #14863e;
+        }
+
+       
+        .main {
+            margin-left: 20px;
+            padding: 20px;
+            transition: margin-left 0.5s;
+        }
+
+        .main.active {
+            margin-left: 270px;
+        }
+
+        .form-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        button {
+            background-color: #04420e;
+            color: rgb(250, 244, 244);
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #011f01;
+        }
+
+        .form-container .full-width {
+            grid-column: span 2;
+        }
+    </style>
+</head>
+<body>
+    
+    <button class="sidebar-toggle" onclick="toggleSidebar()">☰ Menu</button>
+
+   
+    <div class="sidebar" id="sidebar">
+        <h2>Admin</h2>
+        <a href="/create_package">Customize Package</a>
+        <a href="/homepage">Homepage</a>
+        <a href="/contact_us">Contact Us</a>
+        <a href="/signout">Sign Out</a>
+    </div>
+
+    
+    <div class="main" id="main-content">
+    
+        <h2 style="text-align: center;">Customize Package</h2>
+
+          
+          
+
+        <div class="form-container">
+            <div class="form-group">
+                <label for="packageName">Package Name:</label>
+                <input type="text" id="packageName" name="packageName" required>
+            </div>
+            <div class="form-group">
+                <label for="places">Places:</label>
+                <select id="places" name="places" required>
+                    <option value="Islamabad">Islamabad</option>
+                    <option value="Naran">Naran</option>
+                    <option value="Shogran">Shogran</option>
+                    <option value="Kashmir">Kashmir</option>
+                    <option value="Swat">Swat</option>
+                    <option value="Malam Jabba">Malam Jabba</option>
+                </select>
+            </div>
+            <div class="form-group full-width">
+                <label for="price">Price:</label>
+                <input type="number" id="price" name="price" required>
+            </div>
+            <div class="form-group">
+                <label for="days">Number of Days:</label>
+                <input type="number" id="days" name="days" required>
+            </div>
+            <div class="form-group">
+                <label for="food">Food Options:</label>
+                <textarea id="food" name="food" rows="3" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="hotels">Hotels:</label>
+                <textarea id="hotels" name="hotels" rows="3" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="jeep">Jeep Services:</label>
+                <textarea id="jeep" name="jeep" rows="3" required></textarea>
+            </div>
+            <div class="form-group full-width">
+                <button type="submit">Create Package</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+       
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+            sidebar.classList.toggle('active');
+            mainContent.classList.toggle('active');
+        }
+    </script>
+</body>
+</html>
