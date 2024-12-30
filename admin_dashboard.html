@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.1/gsap.min.js"></script>
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -11,15 +12,14 @@
             padding: 0;
             display: flex;
             height: 100vh;
-            background-color: #f6fff5; 
+            background-color: #f6fff5;
             overflow: hidden;
         }
 
-    
         .sidebar {
             width: 250px;
             height: 100%;
-            background-color: #115521; 
+            background-color: #115521;
             color: white;
             padding: 20px;
             box-sizing: border-box;
@@ -52,11 +52,10 @@
         }
 
         .sidebar a:hover {
-            background-color: #115521; 
+            background-color: #115521;
             transform: scale(1.05);
         }
 
-    
         .sidebar-toggle {
             position: fixed;
             top: 20px;
@@ -123,40 +122,6 @@
             background-color: #e8f5e9;
         }
 
-        
-        .right-column {
-            width: 20%;
-            background-color: #98ff8a; 
-            padding: 20px;
-            box-sizing: border-box;
-            animation: slideInRight 0.8s ease-in-out;
-        }
-
-        .right-column h3 {
-            font-size: 22px;
-            margin-bottom: 15px;
-            color: #000000;
-        }
-
-        .right-column ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .right-column li {
-            background-color: #fffdfd; 
-            margin: 10px 0;
-            padding: 10px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(19, 17, 17, 0.1);
-            transition: transform 0.3s;
-        }
-
-        .right-column li:hover {
-            transform: scale(1.05);
-        }
-
-       
         @keyframes slideInLeft {
             from {
                 transform: translateX(-100%);
@@ -177,16 +142,15 @@
     </style>
 </head>
 <body>
-    
     <button class="sidebar-toggle" onclick="toggleSidebar()">☰ Menu</button>
     <div class="sidebar" id="sidebar">
+        <br><br><br>
         <h2>Admin</h2>
-        <a href="create_package.html">Create Package</a>
+        <a href="/create_package">Create Package</a>
         <a href="/homepage">Homepage</a>
         <a href="/contact_us">Contact Us</a>
         <a href="/signout">Sign Out</a>
     </div>
-
 
     <div class="main" id="main-content">
         <h2>Created Packages</h2>
@@ -197,7 +161,6 @@
                 <th>Price</th>
                 <th>Displayed</th>
             </tr>
-            
             <tr>
                 <td>Standard Package</td>
                 <td>Basic features included</td>
@@ -207,23 +170,26 @@
         </table>
     </div>
 
-   
-    <div class="right-column">
-        <h3>Quick Links</h3>
-        <ul>
-            <li><a href="/manage_users">Manage Users</a></li>
-            <li><a href="/analytics">View Analytics</a></li>
-            <li><a href="/settings">Settings</a></li>
-        </ul>
-    </div>
-
     <script>
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const mainContent = document.getElementById('main-content');
+            const sidebarToggle = document.querySelector('.sidebar-toggle');
+
             sidebar.classList.toggle('active');
             mainContent.classList.toggle('active');
+
+            if (sidebar.classList.contains('active')) {
+                gsap.to(sidebar, { left: 0, duration: 0.5 });
+                gsap.to(sidebarToggle, { rotate: 180, duration: 0.3 });
+            } else {
+                gsap.to(sidebar, { left: '-250px', duration: 0.5 });
+                gsap.to(sidebarToggle, { rotate: 0, duration: 0.3 });
+            }
         }
+
+        gsap.from('.sidebar', { x: -250, opacity: 0, duration: 1 });
+        gsap.from('.main', { x: 100, opacity: 0, duration: 1 });
     </script>
 </body>
 </html>
