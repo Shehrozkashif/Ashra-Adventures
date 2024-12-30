@@ -6,37 +6,33 @@
     <title>Create Package</title>
     <style>
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Poppins', sans-serif;
             margin: 0;
             padding: 0;
-            background: linear-gradient(to bottom right, #89dfa0, #3ba514);
+            background: linear-gradient(to bottom right, #a8e063, #56ab2f);
+            overflow-x: hidden;
         }
 
-       
         .sidebar {
             width: 250px;
             height: 100%;
-            background-color: #115521;
+            background-color: #2b7a4b;
             color: white;
             padding: 20px;
             box-sizing: border-box;
             position: fixed;
-            left: -250px; 
+            left: -250px;
             top: 0;
-            transition: left 0.5s ease;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-        }
-
-        
-        .sidebar.active {
-            left: 0;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+            border-top-right-radius: 10px;
+            border-bottom-right-radius: 10px;
         }
 
         .sidebar h2 {
             text-align: center;
             margin-bottom: 30px;
             font-size: 24px;
-            font-weight: bold;
+            font-weight: 600;
         }
 
         .sidebar a {
@@ -50,46 +46,46 @@
         }
 
         .sidebar a:hover {
-            background-color: #14863e;
-            transform: scale(1.1);
+            background-color: #3da369;
+            transform: scale(1.05);
         }
 
         .sidebar-toggle {
             position: fixed;
             top: 20px;
             left: 20px;
-            background-color: #0c7023;
+            background-color: #3da369;
             color: white;
             border: none;
             padding: 10px 15px;
             cursor: pointer;
-            border-radius: 5px;
+            border-radius: 8px;
             font-size: 16px;
             transition: background 0.3s;
             z-index: 1000;
         }
 
         .sidebar-toggle:hover {
-            background-color: #14863e;
+            background-color: #2b7a4b;
         }
 
-       
         .main {
             margin-left: 20px;
             padding: 20px;
             transition: margin-left 0.5s;
         }
 
-        .main.active {
-            margin-left: 270px;
-        }
-
         .form-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            grid-gap: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
+            grid-gap: 30px;
+            max-width: 900px;
+            margin: 50px auto;
+            opacity: 0;
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
         }
 
         .form-group {
@@ -99,40 +95,55 @@
         }
 
         label {
-            font-weight: bold;
+            font-weight: 600;
+            font-size: 16px;
+            color: #2b7a4b;
         }
 
         input, select, textarea {
-            width: 100%;
-            padding: 10px;
+            width: 90%;
+            padding: 15px;
             border: 1px solid #ddd;
             border-radius: 8px;
+            font-size: 14px;
+            background: #f7f9f8;
+            box-shadow: inset 0px 1px 4px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s, border-color 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            box-shadow: 0px 0px 8px rgba(43, 122, 75, 0.5);
+            border-color: #2b7a4b;
+            outline: none;
         }
 
         button {
-            background-color: #04420e;
-            color: rgb(250, 244, 244);
+            background: linear-gradient(to right, #56ab2f, #a8e063);
+            color: white;
             border: none;
-            padding: 10px;
+            padding: 15px;
             cursor: pointer;
             border-radius: 8px;
-            font-size: 16px;
+            font-size: 18px;
+            font-weight: bold;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
         }
 
         button:hover {
-            background-color: #011f01;
+            transform: scale(1.05);
+            box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3);
         }
 
         .form-container .full-width {
             grid-column: span 2;
         }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.1/gsap.min.js"></script>
 </head>
 <body>
-    
     <button class="sidebar-toggle" onclick="toggleSidebar()">☰ Menu</button>
 
-   
     <div class="sidebar" id="sidebar">
         <h2>Admin</h2>
         <a href="/create_package">Customize Package</a>
@@ -141,15 +152,9 @@
         <a href="/signout">Sign Out</a>
     </div>
 
-    
     <div class="main" id="main-content">
-    
-        <h2 style="text-align: center;">Customize Package</h2>
-
-          
-          
-
-        <div class="form-container">
+        <h2 style="text-align: center; color: #2b7a4b;">Customize Package</h2>
+        <div class="form-container" id="form-container">
             <div class="form-group">
                 <label for="packageName">Package Name:</label>
                 <input type="text" id="packageName" name="packageName" required>
@@ -186,19 +191,33 @@
                 <textarea id="jeep" name="jeep" rows="3" required></textarea>
             </div>
             <div class="form-group full-width">
-                <button type="submit">Create Package</button>
+                <button type="submit" id="submit-button">Create Package</button>
             </div>
         </div>
     </div>
 
     <script>
-       
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const mainContent = document.getElementById('main-content');
-            sidebar.classList.toggle('active');
-            mainContent.classList.toggle('active');
+            const isOpen = sidebar.style.left === "0px";
+
+            gsap.to(sidebar, { left: isOpen ? "-250px" : "0px", duration: 0.5, ease: "power3.out" });
+            gsap.to(mainContent, { x: isOpen ? 0 : 250, duration: 0.5, ease: "power3.out" });
         }
+
+        gsap.to("#form-container", { opacity: 1, duration: 1.5, ease: "power3.out" });
+
+        gsap.from(".form-group", { opacity: 0, y: 30, stagger: 0.2, duration: 1.2, delay: 0.5, ease: "power3.out" });
+
+        const submitButton = document.getElementById("submit-button");
+        submitButton.addEventListener("mouseenter", () => {
+            gsap.to(submitButton, { scale: 1.1, duration: 0.2 });
+        });
+
+        submitButton.addEventListener("mouseleave", () => {
+            gsap.to(submitButton, { scale: 1, duration: 0.2 });
+        });
     </script>
 </body>
 </html>
