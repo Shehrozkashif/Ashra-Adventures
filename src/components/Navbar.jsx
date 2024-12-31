@@ -10,7 +10,7 @@ function Navbar() {
         {["Booking", "Our Work", "About Us", "Insights", "Contact"].map((item, index) => (
           <a
             key={index}
-            href={item === "Booking" ? "login.html" : "index.html"}
+            href={item === "Booking" ? "src/frontend/login.html" : "index.html"}
            
           >
             {item}
