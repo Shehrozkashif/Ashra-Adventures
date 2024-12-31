@@ -1,118 +1,138 @@
-import { motion, useAnimation } from "framer-motion";
+import { easeIn, motion, useAnimation } from "framer-motion";
 import React from "react";
 
 function Featured() {
-  const cards = [useAnimation(), useAnimation()]; // Separate controllers for each card
+  const cards = [
+    useAnimation(),
+    useAnimation(),
+    useAnimation(),
+    useAnimation(),
+  ];
 
   const handleHover = (index) => {
-    cards[index].start({
-      y: "0%", // Text will be fully visible
-    });
+    cards[index].start({ y: "0" });
   };
 
   const handleHoverEnd = (index) => {
-    cards[index].start({
-      y: "100%", // Text moves out of view
-    });
-  };
-
-  const textVariant = {
-    initial: { y: "100%" }, // Start below the card
-    animate: { y: "0%" }, // Move to the front of the card
-  };
-
-  const imageVariant = {
-    initial: { scale: 1 },
-    hover: { scale: 1.1 },
+    cards[index].start({ y: "100%" });
   };
 
   return (
-    <div data-scroll data-scroll-section className="relative w-full py-20">
-      <div className="w-full px-20 border-b-[1px] border-zinc-900 bg-white pb-20">
-        <h1 className="text-7xl font-['Neue_Montreal'] tracking-tight">
-          Featured Projects
-        </h1>
+    <div className="w-full py-20">
+      <div
+        className="w-full px-[4.5vw] border-b-[1px]
+       border-zinc-700 pb-10"
+      >
+        <h1 className="text-[4vw] tracking-tighter "> Featured projects</h1>
       </div>
-      <div className="px-20">
-        <div className="cards w-full flex gap-10 mt-10">
-          {/* Card 1 */}
-          <motion.div
-            onHoverStart={() => handleHover(0)}
-            onHoverEnd={() => handleHoverEnd(0)}
-            className="cardcontainer relative w-1/2 h-[75vh] overflow-hidden rounded-xl"
+
+      <div className="cards w-full flex gap-[4vw] pt-[6vw] px-[4.5vw]">
+        <motion.div
+          onHoverStart={() => handleHover(0)}
+          onHoverEnd={() => handleHoverEnd(0)}
+          className="card relative w-1/2 h-[70vh]"
+        >
+          <h1
+            className="absolute flex overflow-hidden left-full -translate-x-1/2 -translate-y-1/2 top-1/2 text-[#CDEA68] z-[9] leading-none tracking-tighter text-[6vw] font-bold"
           >
-            {/* Animated Text */}
-            <motion.h1
-              className="absolute flex overflow-hidden left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[9] leading-none tracking-tighter font-semibold font-['Founders Grotesk'] text-8xl text-[#CDEA68]"
-              initial="initial"
-              animate={cards[0]}
-              transition={{
-                ease: [0.22, 1, 0.36, 1],
-                staggerChildren: 0.05,
-              }}
-            >
-              {"ASHRA".split("").map((char, index) => (
-                <motion.span
-                  key={index}
-                  variants={textVariant}
-                  className="inline-block"
-                >
-                  {char}
-                </motion.span>
-              ))}
-            </motion.h1>
+            {"ASHRA".split("").map((item, index) => (
+              <motion.span
+                initial={{ y: "100%" }}
+                animate={cards[0]}
+                transition={{ ease: [0.22, 1, 0.36, 1], delay: index * 0.06 }}
+                className="inline-block"
+              >
+                {item}
+              </motion.span>
+            ))}
+          </h1>
+          <img
+            className="rounded-lg overflow-hidden w-full h-full object-cover"
+            src="images.jpg"
+            alt="img"
+          />
+        </motion.div>
 
-            {/* Background Image */}
-            <motion.img
-              className="w-full h-full bg-cover"
-              src="imgg.jpg"
-              alt="Trip"
-              variants={imageVariant}
-              initial="initial"
-              whileHover="hover"
-              transition={{ duration: 0.5 }}
-            />
-          </motion.div>
+        <motion.div
+          onHoverStart={() => handleHover(1)}
+          onHoverEnd={() => handleHoverEnd(1)}
+          className="card relative w-1/2 h-[70vh]"
+        >
+          <h1 className="absolute flex overflow-hidden right-full translate-x-1/2 -translate-y-1/2 top-1/2 text-[#CDEA68] z-[9] leading-none tracking-tighter text-[7vw] font-bold">
+            {"ADVENTURE".split("").map((item, index) => (
+              <motion.span
+                initial={{ y: "100%" }}
+                animate={cards[1]}
+                transition={{ ease: [0.22, 1, 0.36, 1], delay: index * 0.06 }}
+                className="inline-block"
+              >
+                {item}
+              </motion.span>
+            ))}
+          </h1>
+          <img
+            className="rounded-lg overflow-hidden w-full h-full object-cover"
+            src="Imgg.jpg"
+            alt="img"
+          />
+        </motion.div>
+      </div>
 
-          {/* Card 2 */}
-          <motion.div
-            onHoverStart={() => handleHover(1)}
-            onHoverEnd={() => handleHoverEnd(1)}
-            className="cardcontainer relative w-1/2 h-[75vh] overflow-hidden rounded-xl"
-          >
-            {/* Animated Text */}
-            <motion.h1
-              className="absolute flex overflow-hidden left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[9] leading-none tracking-tighter font-semibold font-['Founders Grotesk'] text-8xl text-[#CDEA68]"
-              initial="initial"
-              animate={cards[1]}
-              transition={{
-                ease: [0.22, 1, 0.36, 1],
-                staggerChildren: 0.05,
-              }}
-            >
-              {"ADVENTURE".split("").map((char, index) => (
-                <motion.span
-                  key={index}
-                  variants={textVariant}
-                  className="inline-block"
-                >
-                  {char}
-                </motion.span>
-              ))}
-            </motion.h1>
+      <div className="cards w-full flex gap-[4vw] pt-[6vw] px-[4.5vw]">
+        <motion.div
+          onHoverStart={() => handleHover(2)}
+          onHoverEnd={() => handleHoverEnd(2)}
+          className="card relative w-1/2 h-[70vh]"
+        >
+          <h1 className="absolute flex overflow-hidden left-full -translate-x-1/2 -translate-y-1/2 top-1/2 text-[#CDEA68] z-[9] leading-none tracking-tighter text-[6vw] font-bold">
+            {"TRAVEL".split("").map((item, index) => (
+              <motion.span
+                initial={{ y: "100%" }}
+                animate={cards[2]}
+                transition={{ ease: [0.22, 1, 0.36, 1], delay: index * 0.09 }}
+                className="inline-block"
+              >
+                {item}
+              </motion.span>
+            ))}
+          </h1>
+          <img
+            className="rounded-lg overflow-hidden w-full h-full object-cover"
+            src="ima.webp"
+            alt="img"
+          />
+        </motion.div>
 
-            {/* Background Image */}
-            <motion.img
-              className="w-full h-full bg-cover"
-              src="images.jpg"
-              alt="Trip"
-              variants={imageVariant}
-              initial="initial"
-              whileHover="hover"
-              transition={{ duration: 0.5 }}
-            />
-          </motion.div>
-        </div>
+        <motion.div
+          onHoverStart={() => handleHover(3)}
+          onHoverEnd={() => handleHoverEnd(3)}
+          className="card relative w-1/2 h-[70vh]"
+        >
+          <h1 className="absolute flex overflow-hidden right-full translate-x-1/2 -translate-y-1/2 top-1/2 text-[#CDEA68] z-[9] leading-none tracking-tighter text-[6vw] font-bold">
+            {"PREMIUM".split("").map((item, index) => (
+              <motion.span
+                initial={{ y: "100%" }}
+                animate={cards[3]}
+                transition={{ ease: [0.22, 1, 0.36, 1], delay: index * 0.09 }}
+                className="inline-block"
+              >
+                {item}
+              </motion.span>
+            ))}
+          </h1>
+          <img
+            className="rounded-lg overflow-hidden w-full h-full object-cover"
+            src="imag.webp"
+            alt="img"
+          />
+        </motion.div>
+      </div>
+
+      <div className="grid place-items-center pt-[10vw]">
+        <button className="group flex gap-[2vw] items-center px-[2vw] py-[1.2vw] mt-[0.5vw] bg-zinc-800 rounded-full text-white hover:bg-black">
+          VIEW ALL CASE STUDIES
+          <div className="group-hover:scale-150 w-[0.8vw] h-[0.8vw] rounded-full bg-white"></div>
+        </button>
       </div>
     </div>
   );

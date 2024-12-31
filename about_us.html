@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Ashra Travel Agency</title>
+    <style>
+        /* General Page Styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8;
+            color: #333;
+        }
+
+        /* Header Section */
+        .header-section {
+            text-align: center;
+            padding: 50px;
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .page-title {
+            font-size: 3rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        /* Content Section */
+        .content-section {
+            display: flex;
+            justify-content: space-between;
+            margin: 50px 10%;
+        }
+
+        .story-section,
+        .mission-section {
+            width: 48%;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+
+        .section-description {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        /* Image Section */
+        .image-section {
+            display: flex;
+            gap: 20px;
+            margin: 50px 10%;
+        }
+
+        .image-container {
+            width: 48%;
+            position: relative;
+        }
+
+        .image {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .image-container:hover .image {
+            transform: scale(1.05);
+        }
+
+        .image-title {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        /* Call to Action Section */
+        .cta-section {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .cta-button {
+            background-color: #4CAF50;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .cta-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header Section -->
+    <div class="header-section">
+        <h1 class="page-title">About Ashra Travel Agency</h1>
+    </div>
+
+    <!-- About Us Content -->
+    <div class="content-section">
+        <div class="story-section">
+            <h2 class="section-title">Our Story</h2>
+            <p class="section-description">
+                Ashra Travel Agency was founded with a single goal in mind: to bring the world to your doorstep. We are passionate about offering unforgettable travel experiences to all our customers. Whether you want to explore vibrant cities, serene beaches, or trek through mountains, we've got you covered. We focus on creating personalized packages tailored to your interests, ensuring a smooth and enjoyable journey from start to finish.
+            </p>
+        </div>
+
+        <div class="mission-section">
+            <h2 class="section-title">Our Mission</h2>
+            <p class="section-description">
+                At Ashra, we believe travel should be more than just a trip — it should be an experience. Our mission is to provide high-quality travel services, ensuring each of our clients feels special and cared for. We aim to help you create memories that last a lifetime, by offering customized travel itineraries, exclusive packages, and expert guidance every step of the way.
+            </p>
+        </div>
+    </div>
+
+    <!-- Image Section -->
+    <div class="image-section">
+        <div class="image-container">
+            <img src="https://ochi.design/wp-content/uploads/2023/08/Frame-3875-663x551.jpg" alt="Travel" class="image" />
+            <h3 class="image-title">Explore the World with Ashra</h3>
+        </div>
+        <div class="image-container">
+            <img src="https://ochi.design/wp-content/uploads/2022/12/PB-Front-4-663x551.png" alt="Ashra Travel" class="image" />
+            <h3 class="image-title">Experience the Best of Travel</h3>
+        </div>
+    </div>
+
+    <!-- Call to Action Section -->
+    <div class="cta-section">
+        <button class="cta-button">Get In Touch</button>
+    </div>
+
+</body>
+
+</html>

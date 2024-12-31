@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Packages</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.1/gsap.min.js"></script>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            background-color: #f6fff5;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 250px;
+            height: 100%;
+            background-color: #115521;
+            color: white;
+            padding: 20px;
+            box-sizing: border-box;
+            position: fixed;
+            left: -250px;
+            top: 0;
+            transition: 0.3s ease;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            display: block;
+            transition: background 0.3s, transform 0.3s;
+        }
+
+        .sidebar a:hover {
+            background-color: #0c7023;
+            transform: scale(1.05);
+        }
+
+        .sidebar-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background 0.3s;
+            z-index: 1000;
+        }
+
+        .sidebar-toggle:hover {
+            background-color: #0c7023;
+        }
+
+        .container {
+            margin-left: 20px;
+            padding: 20px;
+            width: 100%;
+            transition: margin-left 0.3s;
+        }
+
+        .container.active {
+            margin-left: 270px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 32px;
+            color: #115521;
+            margin-bottom: 20px;
+        }
+
+        .package-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .package-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .package-title {
+            font-size: 24px;
+            color: #28a745;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .package-description {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .package-price {
+            font-size: 20px;
+            color: #115521;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .btn-select {
+            display: inline-block;
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+            text-align: center;
+        }
+
+        .btn-select:hover {
+            background-color: #0c7023;
+            transform: scale(1.05);
+        }
+
+        .message {
+            text-align: center;
+            font-size: 18px;
+            color: #28a745;
+            margin-top: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    
+    <button class="sidebar-toggle" onclick="toggleSidebar()">☰ Menu</button>
+    <div class="sidebar" id="sidebar">
+        <h2>Menu</h2>
+        <a href="/admin_dashboard">Admin Dashboard</a>
+        <a href="/homepage">Homepage</a>
+        <a href="/contact_us">Contact Us</a>
+        <a href="/signout">Sign Out</a>
+    </div>
+
+    <div class="container" id="main-content">
+        <h1>Available Packages</h1>
+        <div id="packages-container">
+            
+        </div>
+        <p class="message" id="message"></p>
+    </div>
+
+    <script>
+       
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+            sidebar.classList.toggle('active');
+            mainContent.classList.toggle('active');
+        }
+        async function fetchPackages() {
+            try {
+                const response = await fetch('/api/packages');
+                const packages = await response.json();
+
+                const container = document.getElementById('packages-container');
+
+                if (packages.length === 0) {
+                    container.innerHTML = '<p>No packages available at the moment.</p>';
+                    return;
+                }
+
+                packages.forEach(pkg => {
+                    
+                    const card = document.createElement('div');
+                    card.classList.add('package-card');
+
+                    card.innerHTML = `
+                        <div class="package-title">${pkg.name}</div>
+                        <div class="package-description">${pkg.description}</div>
+                        <div class="package-price">$${pkg.price}</div>
+                        <button class="btn-select" onclick="selectPackage('${pkg.name}')">Select Package</button>
+                    `;
+
+                    container.appendChild(card);
+                });
+            } catch (error) {
+                console.error('Error fetching packages:', error);
+            }
+        }
+
+        function selectPackage(packageName) {
+            const message = document.getElementById('message');
+            message.textContent = `You have successfully selected the ${packageName}!`;
+            message.style.display = 'block';
+
+            gsap.fromTo(message, { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.5 });
+        }
+
+        gsap.from('.container', { opacity: 0, y: 50, duration: 1 });
+
+        fetchPackages();
+    </script>
+</body>
+</html>

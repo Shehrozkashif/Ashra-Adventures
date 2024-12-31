@@ -16,13 +16,4 @@ function Cards() {
          
          </div>
          <div className='card relative rounded-xl w-1/2 h-full bg-[#192826] flex items-center justify-center'>
-         <img className='w-32'src="logo.png" alt="" />
-            <button className='absolute px-5 py-1 rounded-full border-2 left-10 bottom-10'>About Us</button>
-         
-         </div>
-         </div>
-    </div>
-  )
-}
-
-export default Cards;
+         <img className='w-32'src="logo.
