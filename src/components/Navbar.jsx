@@ -7,15 +7,25 @@ function Navbar() {
         <img src="logo.png" alt="Logo" style={{ height: '70px', width: '150px' }} />
       </div>
       <div style={{ display: 'flex', gap: '10px' }}>
-        {["Booking", "Our Work", "About Us", "Insights", "Contact"].map((item, index) => (
-          <a
-            key={index}
-            href={item === "Booking" ? "src/frontend/login.html" : "index.html"}
-           
-          >
-            {item}
-          </a>
-        ))}
+        {["Booking", "Our Work", "About Us", "Contact"].map((item, index) => {
+          let link = ''; 
+
+          if (item === "Booking") {
+            link = "login.html";
+          } else if (item === "Our Work") {
+            link = "Featured.jsx";
+          } else if (item === "About Us") {
+            link = "Cards.jsx";
+          } else if (item === "Contact") {
+            link = "Footer.jsx";
+          }
+
+          return (
+            <a key={index} href={link}>
+              {item}
+            </a>
+          );
+        })}
       </div>
     </div>
   );

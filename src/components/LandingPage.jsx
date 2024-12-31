@@ -28,22 +28,23 @@ function LandingPage() {
       <div className="border-t-[1px] border-zinc-800 mt-32 flex justify-between items-center py-5 px-20">
        
         <p className="text-md font-light tracking-tight leading-none">
-          For public and private companies
+         Explore Pakistan's wonder with us
         </p>
 
       
         <p className="text-md font-light tracking-tight leading-none">
-          From the first pitch to IPO
+          EAT, SLEEP, TRAVEL 
         </p>
 
-        
+       
         <div className="start flex items-center gap-2">
+        <a href="login.html">
           <div className="px-4 py-1 border-[1px] border-zinc-400 font-light text-sm uppercase rounded-full flex items-center">
-            Start the Project
+            Start the Trip
             <div className="w-8 h-8 flex items-center justify-center border-[2px] border-zinc-500 rounded-full ml-2">
               <FaArrowUpLong className="rotate-45 text-xs" />
             </div>
-          </div>
+          </div> </a>
         </div>
       </div>
     </div>

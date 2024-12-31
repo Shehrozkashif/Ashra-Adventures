@@ -128,13 +128,7 @@ function Featured() {
         </motion.div>
       </div>
 
-      <div className="grid place-items-center pt-[10vw]">
-        <button className="group flex gap-[2vw] items-center px-[2vw] py-[1.2vw] mt-[0.5vw] bg-zinc-800 rounded-full text-white hover:bg-black">
-          VIEW ALL CASE STUDIES
-          <div className="group-hover:scale-150 w-[0.8vw] h-[0.8vw] rounded-full bg-white"></div>
-        </button>
       </div>
-    </div>
   );
 }
 
