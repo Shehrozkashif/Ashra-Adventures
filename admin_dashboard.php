@@ -1,16 +1,39 @@
 <?php
+// Start output buffering to prevent "headers already sent" errors
+ob_start();
+
 include('db.php'); // Include your database connection file
+
+// Handle package deletion
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_package'])) {
+    $package_id = intval($_POST['delete_package']);
+    $delete_query = "DELETE FROM packages WHERE id = ?";
+    $stmt = $conn->prepare($delete_query);
+    $stmt->bind_param("i", $package_id);
+
+    if ($stmt->execute()) {
+        header("Location: admin_dashboard.php?message=Package deleted successfully");
+        exit;
+    } else {
+        header("Location: admin_dashboard.php?error=Failed to delete package");
+        exit;
+    }
+
+    $stmt->close();
+}
 
 // Fetch packages from the database
 $query = "SELECT id, package_name, places, price, days, food_options, hotels FROM packages";
 $result = $conn->query($query);
 
-// Check for errors in query execution
 if (!$result) {
     die("Error fetching packages: " . $conn->error);
 }
-?>
 
+// Check for success or error messages
+$message = isset($_GET['message']) ? htmlspecialchars($_GET['message']) : '';
+$error = isset($_GET['error']) ? htmlspecialchars($_GET['error']) : '';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -65,7 +88,7 @@ if (!$result) {
         }
 
         .sidebar a:hover {
-            background-color: #115521;
+            background-color: #0c7023;
             transform: scale(1.05);
         }
 
@@ -103,6 +126,11 @@ if (!$result) {
             text-align: center;
             font-size: 28px;
             color: #28a745;
+            margin-bottom: 20px;
+        }
+
+        .message {
+            text-align: center;
             margin-bottom: 20px;
         }
 
@@ -161,6 +189,13 @@ if (!$result) {
 
     <div class="main" id="main-content">
         <h2>Created Packages</h2>
+        <?php if ($message): ?>
+            <div class="message" style="color: green;"><?php echo $message; ?></div>
+        <?php endif; ?>
+        <?php if ($error): ?>
+            <div class="message" style="color: red;"><?php echo $error; ?></div>
+        <?php endif; ?>
+
         <table>
             <tr>
                 <th>Package Name</th>
@@ -180,8 +215,8 @@ if (!$result) {
                     <td><?php echo htmlspecialchars($row['food_options']); ?></td>
                     <td><?php echo htmlspecialchars($row['hotels']); ?></td>
                     <td>
-                        <form action="delete_package.php" method="post">
-                            <input type="hidden" name="package_id" value="<?php echo $row['id']; ?>">
+                        <form action="" method="post">
+                            <input type="hidden" name="delete_package" value="<?php echo $row['id']; ?>">
                             <button type="submit" class="delete-button">Delete</button>
                         </form>
                     </td>
@@ -213,3 +248,6 @@ if (!$result) {
     </script>
 </body>
 </html>
+<?php
+ob_end_flush(); // Flush the output buffer
+?>
