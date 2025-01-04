@@ -1,18 +1,46 @@
 <?php
-$servername = "localhost";
-$username = "root"; 
-$password = "";        
-$database = "ashra";       
+include('db.php'); // Include your database connection file
 
-$conn = new mysqli($servername, $username, $password, $database);
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
 
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    // Prepare a query to fetch user data
+    $query = "SELECT * FROM users WHERE username = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows === 1) {
+        $user = $result->fetch_assoc();
+        // Verify the password
+        if (password_verify($password, $user['password'])) {
+            // Start a session and set session variables
+            session_start();
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['username'] = $user['username'];
+
+            // Redirect to customer_dashboard.html
+            header("Location: customer_dashboard.php");
+            exit();
+        } else {
+            echo "<script>alert('Invalid username or password. Please try again.');</script>";
+        }
+    } else {
+        echo "<script>alert('Invalid username or password. Please try again.');</script>";
+    }
+
+    $stmt->close();
 }
-echo "Connected successfully to the ashra database";
 
 $conn->close();
 ?>
+
+
+
+
+
 
 <!DOCTYPE html>
 <html lang="en">

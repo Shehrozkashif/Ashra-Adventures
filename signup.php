@@ -1,20 +1,38 @@
 <?php
-$servername = "localhost";
-$username = "root"; 
-$password = "";        
-$database = "ashra";       
 
-$conn = new mysqli($servername, $username, $password, $database);
+include('db.php'); // Ensure db.php defines $conn properly
 
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+
+    // Sanitize and validate user inputs
+    $username = $conn->real_escape_string($_POST['username']);
+    $email = $conn->real_escape_string($_POST['email']);
+    $password = $conn->real_escape_string($_POST['password']);
+    $contact = $conn->real_escape_string($_POST['contact']);
+
+    // Validate email format
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        echo "<p style='color: red; text-align: center;'>Invalid email format.</p>";
+        exit;
+    }
+
+    // Hash the password for security
+    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
+    // Insert query
+    $sql = "INSERT INTO users (username, email, password, contact) VALUES ('$username', '$email', '$hashed_password', '$contact')";
+
+    if ($conn->query($sql) === TRUE) {
+        echo "<p style='color: green; text-align: center;'>Registered Successfully! <a href='login.html'>Login here</a>.</p>";
+    } else {
+        echo "<p style='color: red; text-align: center;'>Error: " . $conn->error . "</p>";
+    }
+
+    // Close the database connection
+    $conn->close();
 }
-echo "Connected successfully to the ashra database";
-
-$conn->close();
 ?>
-
-
 
 
 <!DOCTYPE html>
@@ -23,6 +41,8 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Signup</title>
+
+    
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -43,8 +63,6 @@ $conn->close();
             padding: 20px;
             width: 300px;
             text-align: center;
-            opacity: 0;
-            transform: translateY(-50px);
         }
 
         .container h2 {
@@ -58,7 +76,6 @@ $conn->close();
             margin: 10px 0;
             border: 1px solid #ddd;
             border-radius: 5px;
-            opacity: 0;
         }
 
         button {
@@ -84,63 +101,21 @@ $conn->close();
         a:hover {
             text-decoration: underline;
         }
-
-        @keyframes gradientAnimation {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.1/gsap.min.js"></script>
+
+
+
 </head>
 <body>
-    <div class="container" id="signup-container">
+    <div class="container">
         <h2>Signup</h2>
-        <form action="/signup" method="POST">
+        <form action="signup.php" method="POST">
             <input type="text" name="username" placeholder="Username" required>
             <input type="email" name="email" placeholder="Email" required>
             <input type="password" name="password" placeholder="Password" required>
             <input type="text" name="contact" placeholder="Contact" required>
             <button type="submit">Sign Up</button>
         </form>
-        <p>Already have an account? <a href="login.html">Login here</a></p>
     </div>
-
-    <script>
-        gsap.to("#signup-container", { opacity: 1, y: 0, duration: 1, ease: "bounce.out" });
-        
-        gsap.to("input", {
-            opacity: 1,
-            y: 0,
-            stagger: 0.1,
-            duration: 0.8,
-            ease: "power3.out",
-            delay: 0.5
-        });
-
-        gsap.to("button", {
-            opacity: 1,
-            scale: 1.1,
-            duration: 0.5,
-            ease: "bounce.out",
-            delay: 1
-        });
-
-        const button = document.querySelector("button");
-        button.addEventListener("mouseenter", () => {
-            gsap.to(button, { scale: 1.2, duration: 0.2 });
-        });
-
-        button.addEventListener("mouseleave", () => {
-            gsap.to(button, { scale: 1, duration: 0.2 });
-        });
-    </script>
 </body>
 </html>
