@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bind_param("ssdisss", $packageName, $places, $price, $days, $food, $hotels, $jeep);
 
     if ($stmt->execute()) {
-        echo "<script>alert('Package created successfully!'); window.location.href = '/homepage';</script>";
+        echo "<script>alert('Package created successfully!'); window.location.href = 'admin_dashboard.php';</script>";
     } else {
         echo "<script>alert('Error: Unable to create package. Please try again.');</script>";
     }
@@ -176,15 +176,17 @@ $conn->close();
 </head>
 <body>
 
-<button class="sidebar-toggle" onclick="toggleSidebar()">☰ Menu</button>
+        <button class="sidebar-toggle" onclick="toggleSidebar()">☰ Menu</button>
     <div class="sidebar" id="sidebar">
         <h2>Admin</h2>
-        <a href="http://localhost:5173/">Homepage</a>
-        <a href="http://localhost:5173/">Sign Out</a>
+        <a href="/create_package">Customize Package</a>
+        <a href="/homepage">Homepage</a>
+        <a href="/contact_us">Contact Us</a>
+        <a href="/signout">Sign Out</a>
     </div>
     <div class="main" id="main-content">
         <h2 style="text-align: center; color: #2b7a4b;">Customize Package</h2>
-        <form class="form-container" id="form-container" method="POST" action="http://localhost/ashra/admin_dashboard.php">
+        <form class="form-container" id="form-container" method="POST" action="">
             <div class="form-group">
                 <label for="packageName">Package Name:</label>
                 <input type="text" id="packageName" name="packageName" required>

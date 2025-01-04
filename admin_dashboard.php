@@ -2,7 +2,7 @@
 include('db.php'); // Include your database connection file
 
 // Fetch packages from the database
-$query = "SELECT package_name, places, price, days, food_options, hotels FROM packages";
+$query = "SELECT id, package_name, places, price, days, food_options, hotels FROM packages";
 $result = $conn->query($query);
 
 // Check for errors in query execution
@@ -134,6 +134,20 @@ if (!$result) {
         tr:hover td {
             background-color: #e8f5e9;
         }
+
+        .delete-button {
+            background-color: #ff4757;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .delete-button:hover {
+            background-color: #e84118;
+        }
     </style>
 </head>
 <body>
@@ -155,6 +169,7 @@ if (!$result) {
                 <th>Days</th>
                 <th>Food Options</th>
                 <th>Hotels</th>
+                <th>Action</th>
             </tr>
             <?php while ($row = $result->fetch_assoc()): ?>
                 <tr>
@@ -164,6 +179,12 @@ if (!$result) {
                     <td><?php echo htmlspecialchars($row['days']); ?></td>
                     <td><?php echo htmlspecialchars($row['food_options']); ?></td>
                     <td><?php echo htmlspecialchars($row['hotels']); ?></td>
+                    <td>
+                        <form action="delete_package.php" method="post">
+                            <input type="hidden" name="package_id" value="<?php echo $row['id']; ?>">
+                            <button type="submit" class="delete-button">Delete</button>
+                        </form>
+                    </td>
                 </tr>
             <?php endwhile; ?>
         </table>
