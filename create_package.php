@@ -1,3 +1,33 @@
+<?php
+include('db.php');
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $packageName = $_POST['packageName'];
+    $places = $_POST['places'];
+    $price = $_POST['price'];
+    $days = $_POST['days'];
+    $food = $_POST['food'];
+    $hotels = $_POST['hotels'];
+    $jeep = $_POST['jeep'];
+
+    // Insert data into the database
+    $sql = "INSERT INTO packages (package_name, places, price, days, food_options, hotels, jeep_services) 
+            VALUES (?, ?, ?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ssdisss", $packageName, $places, $price, $days, $food, $hotels, $jeep);
+
+    if ($stmt->execute()) {
+        echo "<script>alert('Package created successfully!'); window.location.href = '/homepage';</script>";
+    } else {
+        echo "<script>alert('Error: Unable to create package. Please try again.');</script>";
+    }
+
+    $stmt->close();
+}
+
+$conn->close();
+?>
+
 
 
 
@@ -145,8 +175,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.1/gsap.min.js"></script>
 </head>
 <body>
-    <button class="sidebar-toggle" onclick="toggleSidebar()">☰ Menu</button>
 
+<button class="sidebar-toggle" onclick="toggleSidebar()">☰ Menu</button>
     <div class="sidebar" id="sidebar">
         <h2>Admin</h2>
         <a href="/create_package">Customize Package</a>
@@ -154,10 +184,9 @@
         <a href="/contact_us">Contact Us</a>
         <a href="/signout">Sign Out</a>
     </div>
-
     <div class="main" id="main-content">
         <h2 style="text-align: center; color: #2b7a4b;">Customize Package</h2>
-        <div class="form-container" id="form-container">
+        <form class="form-container" id="form-container" method="POST" action="">
             <div class="form-group">
                 <label for="packageName">Package Name:</label>
                 <input type="text" id="packageName" name="packageName" required>
@@ -176,7 +205,7 @@
             </div>
             <div class="form-group full-width">
                 <label for="price">Price:</label>
-                <input type="number" id="price" name="price" required>
+                <input type="number" id="price" name="price" step="0.01" required>
             </div>
             <div class="form-group">
                 <label for="days">Number of Days:</label>
@@ -197,8 +226,10 @@
             <div class="form-group full-width">
                 <button type="submit" id="submit-button">Create Package</button>
             </div>
-        </div>
+        </form>
     </div>
+
+
 
     <script>
         function toggleSidebar() {

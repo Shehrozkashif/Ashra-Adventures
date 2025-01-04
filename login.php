@@ -20,9 +20,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             session_start();
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['username'];
+            $_SESSION['user_type'] = $user['user_type'];
 
-            // Redirect to customer_dashboard.html
-            header("Location: customer_dashboard.php");
+            // Redirect based on user type
+            if ($user['user_type'] === 'admin') {
+                header("Location: admin_dashboard.php");
+            } else {
+                header("Location: customer_dashboard.php");
+            }
             exit();
         } else {
             echo "<script>alert('Invalid username or password. Please try again.');</script>";
@@ -36,10 +41,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $conn->close();
 ?>
-
-
-
-
 
 
 <!DOCTYPE html>
@@ -133,7 +134,7 @@ $conn->close();
             <input type="password" name="password" placeholder="Password" required>
             <button type="submit">Login</button>
         </form>
-        <p>Don't have an account? <a href="signup.html">Sign up here</a></p>
+        <p>Don't have an account? <a href="signup.php">Sign up here</a></p>
     </div>
 
     <script>

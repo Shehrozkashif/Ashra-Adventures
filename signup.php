@@ -4,12 +4,12 @@ include('db.php'); // Ensure db.php defines $conn properly
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-
     // Sanitize and validate user inputs
     $username = $conn->real_escape_string($_POST['username']);
     $email = $conn->real_escape_string($_POST['email']);
     $password = $conn->real_escape_string($_POST['password']);
     $contact = $conn->real_escape_string($_POST['contact']);
+    $user_type = $conn->real_escape_string($_POST['user_type']);
 
     // Validate email format
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -21,10 +21,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
     // Insert query
-    $sql = "INSERT INTO users (username, email, password, contact) VALUES ('$username', '$email', '$hashed_password', '$contact')";
+    $sql = "INSERT INTO users (username, email, password, contact, user_type) 
+            VALUES ('$username', '$email', '$hashed_password', '$contact', '$user_type')";
 
     if ($conn->query($sql) === TRUE) {
-        echo "<p style='color: green; text-align: center;'>Registered Successfully! <a href='login.html'>Login here</a>.</p>";
+        echo "<p style='color: green; text-align: center;'>Registered Successfully! <a href='login.php'>Login here</a>.</p>";
     } else {
         echo "<p style='color: red; text-align: center;'>Error: " . $conn->error . "</p>";
     }
@@ -34,15 +35,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Signup</title>
-
-    
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -70,7 +68,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             font-size: 24px;
         }
 
-        input {
+        input, select {
             width: 90%;
             padding: 10px;
             margin: 10px 0;
@@ -102,9 +100,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             text-decoration: underline;
         }
     </style>
-
-
-
 </head>
 <body>
     <div class="container">
@@ -114,6 +109,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <input type="email" name="email" placeholder="Email" required>
             <input type="password" name="password" placeholder="Password" required>
             <input type="text" name="contact" placeholder="Contact" required>
+            <select name="user_type" required>
+                <option value="customer">Customer</option>
+                <option value="admin">Admin</option>
+            </select>
             <button type="submit">Sign Up</button>
         </form>
     </div>

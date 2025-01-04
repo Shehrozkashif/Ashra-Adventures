@@ -131,7 +131,7 @@
         <br><br><br>
         <h2>Customer</h2>
         <a href="/update_profile">Update Info</a>
-        <a href="/homepage">Homepage</a>
+        <a href="http://localhost:5173/">Homepage</a>
         <a href="/contact_us">Contact Us</a>
         <a href="/signout">Sign Out</a>
     </div>

@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -144,12 +146,13 @@
 <body>
     <button class="sidebar-toggle" onclick="toggleSidebar()">☰ Menu</button>
     <div class="sidebar" id="sidebar">
-        <br><br><br>
+        
+    <br><br><br>
         <h2>Admin</h2>
         <a href="/create_package">Create Package</a>
-        <a href="/homepage">Homepage</a>
-        <a href="/contact_us">Contact Us</a>
+        <a href="http://localhost:5173/">Homepage</a>
         <a href="/signout">Sign Out</a>
+
     </div>
 
     <div class="main" id="main-content">
