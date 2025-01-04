@@ -15,8 +15,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt->bind_param("ii", $customer_id, $package_id);
     $stmt->execute();
 
-    // Redirect to payment.php
-    header("Location: payment.php");
+    // Redirect to a success message page
+    header("Location: success.php");
     exit();
 }
 ?>

@@ -14,9 +14,9 @@ function Navbar() {
             link = "http://localhost/ashra/login.php";
           } else if (item === "Our Work") {
             link = "Featured.jsx";
-          } else if (item === "Abbout.jsx") {
-            link = "Cards.jsx";
-          } else if (item === "footer.jsx") {
+          } else if (item === "About Us") {
+            link = "about_us.html";
+          } else if (item === "Contact") {
             link = "Footer.jsx";
           }
 
