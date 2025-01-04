@@ -1,13 +1,23 @@
 <?php
-include('db.php'); // Include your database connection file
+include('db.php'); // Include database connection
 
-// Fetch available packages from the database
-$query = "SELECT id, package_name, places, price, days, food_options, hotels, jeep_services FROM packages";
+// Fetch available packages
+$query = "SELECT * FROM packages";
 $result = $conn->query($query);
 
-// Check for errors in query execution
-if (!$result) {
-    die("Error fetching packages: " . $conn->error);
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $package_id = $_POST['package_id'];
+    $customer_id = 1; // Assuming customer_id is set. Replace with actual value from session or user data.
+
+    // Insert selected package into the customer_packages table
+    $insertQuery = "INSERT INTO customer_packages (customer_id, package_id) VALUES (?, ?)";
+    $stmt = $conn->prepare($insertQuery);
+    $stmt->bind_param("ii", $customer_id, $package_id);
+    $stmt->execute();
+
+    // Redirect to payment.php
+    header("Location: payment.php");
+    exit();
 }
 ?>
 
@@ -24,14 +34,14 @@ if (!$result) {
             padding: 0;
             display: flex;
             height: 100vh;
-            background-color: #f7faf6; 
+            background-color: #f7faf6;
             overflow: hidden;
         }
 
         .sidebar {
             width: 250px;
             height: 100%;
-            background-color: #115521; 
+            background-color: #115521;
             color: white;
             padding: 20px;
             box-sizing: border-box;
@@ -64,7 +74,7 @@ if (!$result) {
         }
 
         .sidebar a:hover {
-            background-color: #115521; 
+            background-color: #0c7023;
             transform: scale(1.05);
         }
 
@@ -154,9 +164,9 @@ if (!$result) {
     <button class="sidebar-toggle" onclick="toggleSidebar()">☰ Menu</button>
     <div class="sidebar" id="sidebar">
         <h2>Customer</h2>
-        <a href="/update_profile">Cancel Package</a>
-        <a href="/homepage">Homepage</a>
-        <a href="/signout">Sign Out</a>
+        <a href="/cancel_package.php">Cancel Package</a>
+        <a href="/homepage.php">Homepage</a>
+        <a href="/signout.php">Sign Out</a>
     </div>
 
     <div class="main" id="main-content">
@@ -172,23 +182,27 @@ if (!$result) {
                 <th>Jeep Services</th>
                 <th>Action</th>
             </tr>
-            <?php while ($row = $result->fetch_assoc()): ?>
-                <tr>
-                    <td><?php echo htmlspecialchars($row['package_name']); ?></td>
-                    <td><?php echo htmlspecialchars($row['places']); ?></td>
-                    <td><?php echo htmlspecialchars($row['price']); ?></td>
-                    <td><?php echo htmlspecialchars($row['days']); ?></td>
-                    <td><?php echo htmlspecialchars($row['food_options']); ?></td>
-                    <td><?php echo htmlspecialchars($row['hotels']); ?></td>
-                    <td><?php echo htmlspecialchars($row['jeep_services']); ?></td>
-                    <td>
-                        <form action="select_package.php" method="post">
-                            <input type="hidden" name="package_id" value="<?php echo $row['id']; ?>">
-                            <button type="submit" class="select-button">Select</button>
-                        </form>
-                    </td>
-                </tr>
-            <?php endwhile; ?>
+            <?php if ($result): ?>
+                <?php while ($row = $result->fetch_assoc()): ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($row['package_name']); ?></td>
+                        <td><?php echo htmlspecialchars($row['places']); ?></td>
+                        <td><?php echo htmlspecialchars($row['price']); ?></td>
+                        <td><?php echo htmlspecialchars($row['days']); ?></td>
+                        <td><?php echo htmlspecialchars($row['food_options']); ?></td>
+                        <td><?php echo htmlspecialchars($row['hotels']); ?></td>
+                        <td><?php echo htmlspecialchars($row['jeep_services']); ?></td>
+                        <td>
+                            <form action="" method="post">
+                                <input type="hidden" name="package_id" value="<?php echo $row['id']; ?>">
+                                <button type="submit" class="select-button">Select</button>
+                            </form>
+                        </td>
+                    </tr>
+                <?php endwhile; ?>
+            <?php else: ?>
+                <tr><td colspan="8">No packages available.</td></tr>
+            <?php endif; ?>
         </table>
     </div>
 
@@ -200,5 +214,6 @@ if (!$result) {
             mainContent.classList.toggle('active');
         }
     </script>
+
 </body>
 </html>
