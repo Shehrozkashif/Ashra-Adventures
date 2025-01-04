@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $hotels = $_POST['hotels'];
     $jeep = $_POST['jeep'];
 
-    // Insert data into the database
+  
     $sql = "INSERT INTO packages (package_name, places, price, days, food_options, hotels, jeep_services) 
             VALUES (?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);

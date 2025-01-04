@@ -1,21 +1,21 @@
 <?php
-include('db.php'); // Include database connection
+include('db.php'); 
 
-// Fetch available packages
+
 $query = "SELECT * FROM packages";
 $result = $conn->query($query);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $package_id = $_POST['package_id'];
-    $customer_id = 1; // Assuming customer_id is set. Replace with actual value from session or user data.
+    $customer_id = 1; 
 
-    // Insert selected package into the customer_packages table
+
     $insertQuery = "INSERT INTO customer_packages (customer_id, package_id) VALUES (?, ?)";
     $stmt = $conn->prepare($insertQuery);
     $stmt->bind_param("ii", $customer_id, $package_id);
     $stmt->execute();
 
-    // Redirect to a success message page
+    
     header("Location: success.php");
     exit();
 }
@@ -164,9 +164,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <button class="sidebar-toggle" onclick="toggleSidebar()">☰ Menu</button>
     <div class="sidebar" id="sidebar">
         <h2>Customer</h2>
-        <a href="/cancel_package.php">Cancel Package</a>
-        <a href="/homepage.php">Homepage</a>
-        <a href="/signout.php">Sign Out</a>
+        <a href="http://localhost:5173/">Homepage</a>
+        <a href="http://localhost:5173/">Sign Out</a>
     </div>
 
     <div class="main" id="main-content">

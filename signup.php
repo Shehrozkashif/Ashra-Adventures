@@ -1,26 +1,26 @@
 <?php
 
-include('db.php'); // Ensure db.php defines $conn properly
+include('db.php');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    // Sanitize and validate user inputs
+   
     $username = $conn->real_escape_string($_POST['username']);
     $email = $conn->real_escape_string($_POST['email']);
     $password = $conn->real_escape_string($_POST['password']);
     $contact = $conn->real_escape_string($_POST['contact']);
     $user_type = $conn->real_escape_string($_POST['user_type']);
 
-    // Validate email format
+  
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         echo "<p style='color: red; text-align: center;'>Invalid email format.</p>";
         exit;
     }
 
-    // Hash the password for security
+ 
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-    // Insert query
+    
     $sql = "INSERT INTO users (username, email, password, contact, user_type) 
             VALUES ('$username', '$email', '$hashed_password', '$contact', '$user_type')";
 
@@ -30,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "<p style='color: red; text-align: center;'>Error: " . $conn->error . "</p>";
     }
 
-    // Close the database connection
+  
     $conn->close();
 }
 ?>

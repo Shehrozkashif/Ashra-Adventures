@@ -7,7 +7,7 @@ function Navbar() {
         <img src="logo.png" alt="Logo" style={{ height: '70px', width: '150px' }} />
       </div>
       <div style={{ display: 'flex', gap: '10px' }}>
-        {["Booking", "Our Work", "About Us", "Contact"].map((item, index) => {
+        {["Booking", "Our Work", "About Us"].map((item, index) => {
           let link = ''; 
 
           if (item === "Booking") {
@@ -16,9 +16,7 @@ function Navbar() {
             link = "Featured.jsx";
           } else if (item === "About Us") {
             link = "about_us.html";
-          } else if (item === "Contact") {
-            link = "Footer.jsx";
-          }
+          } 
 
           return (
             <a key={index} href={link}>
