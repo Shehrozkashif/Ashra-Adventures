@@ -11,12 +11,12 @@ function Navbar() {
           let link = ''; 
 
           if (item === "Booking") {
-            link = "login.html";
+            link = "http://localhost/ashra/login.php";
           } else if (item === "Our Work") {
             link = "Featured.jsx";
-          } else if (item === "About Us") {
+          } else if (item === "Abbout.jsx") {
             link = "Cards.jsx";
-          } else if (item === "Contact") {
+          } else if (item === "footer.jsx") {
             link = "Footer.jsx";
           }
 

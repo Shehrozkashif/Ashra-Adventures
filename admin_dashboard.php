@@ -1,4 +1,15 @@
+<?php
+include('db.php'); // Include your database connection file
 
+// Fetch packages from the database
+$query = "SELECT package_name, places, price, days, food_options, hotels FROM packages";
+$result = $conn->query($query);
+
+// Check for errors in query execution
+if (!$result) {
+    die("Error fetching packages: " . $conn->error);
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -123,36 +134,15 @@
         tr:hover td {
             background-color: #e8f5e9;
         }
-
-        @keyframes slideInLeft {
-            from {
-                transform: translateX(-100%);
-            }
-            to {
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes slideInRight {
-            from {
-                transform: translateX(100%);
-            }
-            to {
-                transform: translateX(0);
-            }
-        }
     </style>
 </head>
 <body>
     <button class="sidebar-toggle" onclick="toggleSidebar()">☰ Menu</button>
     <div class="sidebar" id="sidebar">
-        
-    <br><br><br>
         <h2>Admin</h2>
-        <a href="/create_package">Create Package</a>
+        <a href="create_package.php">Create Package</a>
         <a href="http://localhost:5173/">Homepage</a>
-        <a href="/signout">Sign Out</a>
-
+        <a href="http://localhost:5173/">Sign Out</a>
     </div>
 
     <div class="main" id="main-content">
@@ -160,16 +150,22 @@
         <table>
             <tr>
                 <th>Package Name</th>
-                <th>Description</th>
+                <th>Places</th>
                 <th>Price</th>
-                <th>Displayed</th>
+                <th>Days</th>
+                <th>Food Options</th>
+                <th>Hotels</th>
             </tr>
-            <tr>
-                <td>Standard Package</td>
-                <td>Basic features included</td>
-                <td>$100</td>
-                <td>Yes</td>
-            </tr>
+            <?php while ($row = $result->fetch_assoc()): ?>
+                <tr>
+                    <td><?php echo htmlspecialchars($row['package_name']); ?></td>
+                    <td><?php echo htmlspecialchars($row['places']); ?></td>
+                    <td><?php echo htmlspecialchars($row['price']); ?></td>
+                    <td><?php echo htmlspecialchars($row['days']); ?></td>
+                    <td><?php echo htmlspecialchars($row['food_options']); ?></td>
+                    <td><?php echo htmlspecialchars($row['hotels']); ?></td>
+                </tr>
+            <?php endwhile; ?>
         </table>
     </div>
 
