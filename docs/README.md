@@ -83,17 +83,20 @@ To create a production build:
 ```
 ashra-adventures/
 │
-├── public/              # Static assets
-├── src/                 # Source files
-│   ├── components/      # Reusable components
-│   ├── pages/           # Route-based pages
-│   ├── styles/          # CSS stylesheets
-│   └── App.tsx          # Main React App component
+├── docs/                # Documents
 │
-├── backend/             # PHP backend
-│   ├── config/          # Configuration files
-│   ├── controllers/     # API controllers
-│   └── models/          # Database models
+├── src/                 # Source files
+│   ├── assets/          
+│   ├── components/      # Route-based pages
+│   ├── index.css/       # Main css file   
+│   ├── main.jsx/        # Main
+│   └── App.jsx          # Main React App component
+│
+├── html/                # HTML Files
+├── php/                 # PHP Files
+├── images/              # Images
+│
+├── index.html/          # Main Starting Point
 │
 └── package.json         # Project dependencies
 ```
