@@ -1,47 +1,46 @@
 <?php
-include('db.php'); 
+session_start();
+include('db.php');
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+$error = ""; 
 
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (isset($_POST['email']) && isset($_POST['password'])) {
+        $email = $conn->real_escape_string($_POST['email']);
+        $password = $conn->real_escape_string($_POST['password']);
 
-    $query = "SELECT * FROM users WHERE username = ?";
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param("s", $username);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    if ($result->num_rows === 1) {
-        $user = $result->fetch_assoc();
-  
-        if (password_verify($password, $user['password'])) {
-          
-            session_start();
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['username'] = $user['username'];
-            $_SESSION['user_type'] = $user['user_type'];
-
-        
-            if ($user['user_type'] === 'admin') {
-                header("Location: admin_dashboard.php");
-            } else {
-                header("Location: customer_dashboard.php");
-            }
-            exit();
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $error = "Invalid email format.";
         } else {
-            echo "<script>alert('Invalid username or password. Please try again.');</script>";
+            $sql = "SELECT * FROM users WHERE email = '$email'";
+            $result = $conn->query($sql);
+
+            if ($result->num_rows > 0) {
+                $row = $result->fetch_assoc();
+
+                if (password_verify($password, $row['password'])) {
+                    $_SESSION['email'] = $email;
+
+                    if ($row['user_type'] == 'Admin') {
+                        header('Location: admin_dashboard.php');
+                    } else {
+                        header('Location: customer_dashboard.php');
+                    }
+                    exit();
+                } else {
+                    $error = "Incorrect password."; 
+                }
+            } else {
+                $error = "No user found with that email.";
+            }
         }
     } else {
-        echo "<script>alert('Invalid username or password. Please try again.');</script>";
+        $error = "Please enter both email and password.";
     }
 
-    $stmt->close();
+    $conn->close();
 }
-
-$conn->close();
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -122,15 +121,15 @@ $conn->close();
                 background-position: 0% 50%;
             }
         }
-
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.1/gsap.min.js"></script>
 </head>
 <body>
     <div class="container" id="login-container">
         <h2>Login</h2>
+        <?php if ($error != "") { echo "<p style='color: red;'>$error</p>"; } ?>
         <form action="login.php" method="POST">
-            <input type="text" name="username" placeholder="Username" required>
+            <input type="email" name="email" placeholder="Email" required>
             <input type="password" name="password" placeholder="Password" required>
             <button type="submit">Login</button>
         </form>

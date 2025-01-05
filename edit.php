@@ -3,14 +3,34 @@ session_start();
 include('db.php');
 
 if (!isset($_SESSION['email'])) {
-    echo "<script>alert('You must be logged in to create a package.'); window.location.href = 'login.php';</script>";
+    header('Location: login.php');
     exit();
 }
 
-$user_email = $_SESSION['email'];
+$email = $_SESSION['email'];
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $packageName = $_POST['packageName'];
+if (!isset($_GET['id'])) {
+    echo "<p style='color: red; text-align: center;'>No package selected.</p>";
+    exit();
+}
+
+$package_id = $_GET['id'];
+
+$sql = "SELECT * FROM packages WHERE id = ? AND user_email = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("is", $package_id, $email);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows == 0) {
+    echo "<p style='color: red; text-align: center;'>Package not found or you do not have access to edit it.</p>";
+    exit();
+}
+
+$package = $result->fetch_assoc();
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $package_name = $_POST['packageName'];
     $places = $_POST['places'];
     $price = $_POST['price'];
     $days = $_POST['days'];
@@ -18,26 +38,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $hotels = $_POST['hotels'];
     $jeep = $_POST['jeep'];
 
-    if (!is_numeric($price) || !is_numeric($days)) {
-        echo "<script>alert('Price and days must be valid numbers');</script>";
+    $update_sql = "UPDATE packages SET package_name=?, places=?, price=?, days=?, food_options=?, hotels=?, jeep_services=? WHERE id=? AND user_email=?";
+    $update_stmt = $conn->prepare($update_sql);
+    $update_stmt->bind_param("ssdiissis", $package_name, $places, $price, $days, $food, $hotels, $jeep, $package_id, $email);
+
+    if ($update_stmt->execute()) {
+        echo "<p style='color: green; text-align: center;'>Package updated successfully.</p>";
     } else {
-        $sql = "INSERT INTO packages (package_name, places, price, days, food_options, hotels, jeep_services, user_email) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssdissss", $packageName, $places, $price, $days, $food, $hotels, $jeep, $user_email);
-
-        if ($stmt->execute()) {
-            echo "<script>alert('Package created successfully!'); window.location.href = 'admin_dashboard.php';</script>";
-        } else {
-            echo "<script>alert('Error: Unable to create package. Please try again.');</script>";
-        }
-
-        $stmt->close();
+        echo "<p style='color: red; text-align: center;'>Error updating package: " . $conn->error . "</p>";
     }
 }
 
 $conn->close();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -184,7 +198,7 @@ $conn->close();
 </head>
 <body>
 
-        <button class="sidebar-toggle" onclick="toggleSidebar()">☰ Menu</button>
+    <button class="sidebar-toggle" onclick="toggleSidebar()">☰ Menu</button>
     <div class="sidebar" id="sidebar"><br><br><br>
         <h2>Admin</h2>
         <a href="create_package.php">Customize Package</a>
@@ -196,47 +210,45 @@ $conn->close();
         <form class="form-container" id="form-container" method="POST" action="">
             <div class="form-group">
                 <label for="packageName">Package Name:</label>
-                <input type="text" id="packageName" name="packageName" required>
+                <input type="text" id="packageName" name="packageName" value="<?php echo htmlspecialchars($package['package_name']); ?>" required>
             </div>
             <div class="form-group">
                 <label for="places">Places:</label>
                 <select id="places" name="places" required>
-                    <option value="Islamabad">Islamabad</option>
-                    <option value="Naran">Naran</option>
-                    <option value="Shogran">Shogran</option>
-                    <option value="Kashmir">Kashmir</option>
-                    <option value="Swat">Swat</option>
-                    <option value="TaoBat">TaoBat</option>
-                    <option value="Malam Jabba">Malam Jabba</option>
+                    <option value="Islamabad" <?php echo ($package['places'] == 'Islamabad') ? 'selected' : ''; ?>>Islamabad</option>
+                    <option value="Naran" <?php echo ($package['places'] == 'Naran') ? 'selected' : ''; ?>>Naran</option>
+                    <option value="Shogran" <?php echo ($package['places'] == 'Shogran') ? 'selected' : ''; ?>>Shogran</option>
+                    <option value="Kashmir" <?php echo ($package['places'] == 'Kashmir') ? 'selected' : ''; ?>>Kashmir</option>
+                    <option value="Swat" <?php echo ($package['places'] == 'Swat') ? 'selected' : ''; ?>>Swat</option>
+                    <option value="TaoBat" <?php echo ($package['places'] == 'TaoBat') ? 'selected' : ''; ?>>TaoBat</option>
+                    <option value="Malam Jabba" <?php echo ($package['places'] == 'Malam Jabba') ? 'selected' : ''; ?>>Malam Jabba</option>
                 </select>
             </div>
             <div class="form-group full-width">
                 <label for="price">Price:</label>
-                <input type="number" id="price" name="price" step="0.01" required>
+                <input type="number" id="price" name="price" step="0.01" value="<?php echo htmlspecialchars($package['price']); ?>" required>
             </div>
             <div class="form-group">
                 <label for="days">Number of Days:</label>
-                <input type="number" id="days" name="days" required>
+                <input type="number" id="days" name="days" value="<?php echo htmlspecialchars($package['days']); ?>" required>
             </div>
             <div class="form-group">
                 <label for="food">Food Options:</label>
-                <textarea id="food" name="food" rows="3" required></textarea>
+                <textarea id="food" name="food" rows="3" required><?php echo htmlspecialchars($package['food_options']); ?></textarea>
             </div>
             <div class="form-group">
                 <label for="hotels">Hotels:</label>
-                <textarea id="hotels" name="hotels" rows="3" required></textarea>
+                <textarea id="hotels" name="hotels" rows="3" required><?php echo htmlspecialchars($package['hotels']); ?></textarea>
             </div>
             <div class="form-group">
                 <label for="jeep">Jeep Services:</label>
-                <textarea id="jeep" name="jeep" rows="3" required></textarea>
+                <textarea id="jeep" name="jeep" rows="3" required><?php echo htmlspecialchars($package['jeep_services']); ?></textarea>
             </div>
             <div class="form-group full-width">
-                <button type="submit" id="submit-button">Create Package</button>
+                <button type="submit" id="submit-button">Edit Package</button>
             </div>
         </form>
     </div>
-
-
 
     <script>
         function toggleSidebar() {

@@ -9,18 +9,27 @@ if (!isset($_SESSION['email'])) {
 
 $email = $_SESSION['email'];
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_package'])) {
-    $package_id = $_POST['delete_package'];
-    
-    $delete_sql = "DELETE FROM packages WHERE id = '$package_id' AND user_email = '$email'";
-    if ($conn->query($delete_sql) === TRUE) {
-        $message = "Package deleted successfully.";
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['select_package'])) {
+    $package_id = $_POST['package_id'];
+
+    // Check if the package is already selected
+    $check_sql = "SELECT * FROM customer_packages WHERE package_id = '$package_id' AND user_email = '$email'";
+    $check_result = $conn->query($check_sql);
+
+    if ($check_result->num_rows > 0) {
+        $error = "You have already selected this package.";
     } else {
-        $error = "Error deleting package: " . $conn->error;
+        // Add to customer_packages table
+        $insert_sql = "INSERT INTO customer_packages (user_email, package_id) VALUES ('$email', '$package_id')";
+        if ($conn->query($insert_sql) === TRUE) {
+            $message = "Package selected successfully.";
+        } else {
+            $error = "Error selecting package: " . $conn->error;
+        }
     }
 }
 
-$sql = "SELECT * FROM packages WHERE user_email = '$email'";
+$sql = "SELECT * FROM packages";
 $result = $conn->query($sql);
 
 $conn->close();
@@ -30,17 +39,15 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title>Select Packages</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.1/gsap.min.js"></script>
     <style>
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
-            display: flex;
-            height: 100vh;
             background-color: #f6fff5;
-            overflow: hidden;
+            display: flex;
         }
 
         .sidebar {
@@ -87,7 +94,7 @@ $conn->close();
             position: fixed;
             top: 20px;
             left: 20px;
-            background-color: #0c7023;
+            background-color: #28a745;
             color: white;
             border: none;
             padding: 10px 15px;
@@ -99,25 +106,13 @@ $conn->close();
         }
 
         .sidebar-toggle:hover {
-            background-color: #115521;
+            background-color: #218838;
         }
 
-        .main {
-            margin-left: 20px;
+        .container {
+            margin-left: 270px;
             padding: 20px;
             width: 100%;
-            transition: margin-left 0.3s;
-        }
-
-        .main.active {
-            margin-left: 270px;
-        }
-
-        .main h2 {
-            text-align: center;
-            font-size: 28px;
-            color: #28a745;
-            margin-bottom: 20px;
         }
 
         .message {
@@ -128,7 +123,6 @@ $conn->close();
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
             background-color: white;
             border-radius: 8px;
             overflow: hidden;
@@ -154,8 +148,8 @@ $conn->close();
             background-color: #e8f5e9;
         }
 
-        .delete-button {
-            background-color: #ff4757;
+        .select-button {
+            background-color: #0c7023;
             color: white;
             border: none;
             padding: 8px 12px;
@@ -164,41 +158,40 @@ $conn->close();
             transition: background-color 0.3s;
         }
 
-        .delete-button:hover {
-            background-color: #e84118;
+        .select-button:hover {
+            background-color: #28a745;
         }
 
-        .edit-button {
-            background-color:rgb(33, 194, 105);
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s;
+        .error {
+            color: red;
+            text-align: center;
         }
 
-        .edit-button:hover {
-            background-color:rgb(21, 110, 13);
+        .success {
+            color: green;
+            text-align: center;
         }
     </style>
 </head>
 <body>
+
     <button class="sidebar-toggle" onclick="toggleSidebar()">☰ Menu</button>
     <div class="sidebar" id="sidebar"><br><br>
-        <h2>Admin</h2>
-        <a href="create_package.php">Create Package</a>
+        <h2>Customer</h2>
+        <a href="select_package.php">Select Package</a>
         <a href="http://localhost:5173/">Homepage</a>
         <a href="login.php">Sign Out</a>
     </div>
 
-    <div class="main" id="main-content">
-        <h2>Created Packages</h2>
+    <div class="container">
+        <h2>Select a Package</h2>
+
         <?php if (isset($message)): ?>
-            <div class="message" style="color: green;"><?php echo $message; ?></div>
+            <div class="message success"><?php echo $message; ?></div>
         <?php endif; ?>
+
         <?php if (isset($error)): ?>
-            <div class="message" style="color: red;"><?php echo $error; ?></div>
+            <div class="message error"><?php echo $error; ?></div>
         <?php endif; ?>
 
         <table>
@@ -221,17 +214,16 @@ $conn->close();
                         <td><?php echo htmlspecialchars($row['food_options']); ?></td>
                         <td><?php echo htmlspecialchars($row['hotels']); ?></td>
                         <td>
-                            <form action="" method="post" style="display: inline;">
-                                <input type="hidden" name="delete_package" value="<?php echo $row['id']; ?>">
-                                <button type="submit" class="delete-button">Delete</button>
+                            <form action="" method="post">
+                                <input type="hidden" name="package_id" value="<?php echo $row['id']; ?>">
+                                <button type="submit" name="select_package" class="select-button">Select</button>
                             </form>
-                            <a class="edit-button" href="edit.php?id=<?php echo $row['id']; ?>" style="margin-left: 10px;">Edit</a>
                         </td>
                     </tr>
                 <?php endwhile; ?>
             <?php else: ?>
                 <tr>
-                    <td colspan="7">No packages found.</td>
+                    <td colspan="7">No packages available.</td>
                 </tr>
             <?php endif; ?>
         </table>
@@ -239,24 +231,25 @@ $conn->close();
 
     <script>
         function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const mainContent = document.getElementById('main-content');
-            const sidebarToggle = document.querySelector('.sidebar-toggle');
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.getElementById('main-content');
+    const sidebarToggle = document.querySelector('.sidebar-toggle');
 
-            sidebar.classList.toggle('active');
-            mainContent.classList.toggle('active');
+    sidebar.classList.toggle('active');
+    mainContent.classList.toggle('active');
 
-            if (sidebar.classList.contains('active')) {
-                gsap.to(sidebar, { left: 0, duration: 0.5 });
-                gsap.to(sidebarToggle, { rotate: 180, duration: 0.3 });
-            } else {
-                gsap.to(sidebar, { left: '-250px', duration: 0.5 });
-                gsap.to(sidebarToggle, { rotate: 0, duration: 0.3 });
-            }
-        }
+    if (sidebar.classList.contains('active')) {
+        gsap.to(sidebar, { left: 0, duration: 0.5 });
+        gsap.to(sidebarToggle, { rotate: 180, duration: 0.3 });
+    } else {
+        gsap.to(sidebar, { left: '-250px', duration: 0.5 });
+        gsap.to(sidebarToggle, { rotate: 0, duration: 0.3 });
+    }
+}
 
-        gsap.from('.sidebar', { x: -250, opacity: 0, duration: 1 });
-        gsap.from('.main', { x: 100, opacity: 0, duration: 1 });
+gsap.from('.sidebar', { x: -250, opacity: 0, duration: 1 });
+gsap.from('.main', { x: 100, opacity: 0, duration: 1 });
+
     </script>
 </body>
 </html>

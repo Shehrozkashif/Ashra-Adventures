@@ -1,24 +1,40 @@
 <?php
-include('db.php'); 
+session_start(); 
 
+include('db.php');
 
-$query = "SELECT * FROM packages";
-$result = $conn->query($query);
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $package_id = $_POST['package_id'];
-    $customer_id = 1; 
-
-
-    $insertQuery = "INSERT INTO customer_packages (customer_id, package_id) VALUES (?, ?)";
-    $stmt = $conn->prepare($insertQuery);
-    $stmt->bind_param("ii", $customer_id, $package_id);
-    $stmt->execute();
-
-    
-    header("Location: success.php");
+if (!isset($_SESSION['email'])) {
+    header("Location: login.php");
     exit();
 }
+
+$user_email = $_SESSION['email']; 
+
+$query = "
+    SELECT packages.* 
+    FROM packages 
+    JOIN customer_packages ON packages.id = customer_packages.package_id
+    WHERE customer_packages.user_email = ?
+";
+$stmt = $conn->prepare($query);
+$stmt->bind_param("s", $user_email); 
+$stmt->execute();
+$result = $stmt->get_result();
+
+if (isset($_POST['remove_package'])) {
+    $package_id = $_POST['package_id'];
+
+    $delete_query = "DELETE FROM customer_packages WHERE user_email = ? AND package_id = ?";
+    $delete_stmt = $conn->prepare($delete_query);
+    $delete_stmt->bind_param("si", $user_email, $package_id);
+    if ($delete_stmt->execute()) {
+        echo "<script>alert('Package removed successfully!');</script>";
+    } else {
+        echo "<script>alert('Error removing package!');</script>";
+    }
+    $delete_stmt->close();
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -27,6 +43,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Customer Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.1/gsap.min.js"></script>
+
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -144,32 +162,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             background-color: #e8f5e9;
         }
 
-        .select-button {
-            background-color: #007bff;
+        .remove-btn {
+            background-color: #ff4d4d;
             color: white;
+            padding: 5px 10px;
             border: none;
-            padding: 8px 12px;
-            cursor: pointer;
             border-radius: 5px;
-            transition: background-color 0.3s;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
         }
 
-        .select-button:hover {
-            background-color: #0056b3;
+        .remove-btn:hover {
+            background-color: #e60000;
         }
     </style>
 </head>
 <body>
 
     <button class="sidebar-toggle" onclick="toggleSidebar()">☰ Menu</button>
-    <div class="sidebar" id="sidebar">
+    <div class="sidebar" id="sidebar"><br><br><br>
         <h2>Customer</h2>
+        <a href="select_package.php">Select Package</a>
         <a href="http://localhost:5173/">Homepage</a>
-        <a href="http://localhost:5173/">Sign Out</a>
+        <a href="login.php">Sign Out</a>
     </div>
 
     <div class="main" id="main-content">
-        <h2>Available Packages</h2>
+        <h2>Availed Packages</h2>
         <table>
             <tr>
                 <th>Package Name</th>
@@ -181,7 +201,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <th>Jeep Services</th>
                 <th>Action</th>
             </tr>
-            <?php if ($result): ?>
+            <?php if ($result->num_rows > 0): ?>
                 <?php while ($row = $result->fetch_assoc()): ?>
                     <tr>
                         <td><?php echo htmlspecialchars($row['package_name']); ?></td>
@@ -192,15 +212,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <td><?php echo htmlspecialchars($row['hotels']); ?></td>
                         <td><?php echo htmlspecialchars($row['jeep_services']); ?></td>
                         <td>
-                            <form action="" method="post">
+                            <form method="POST">
                                 <input type="hidden" name="package_id" value="<?php echo $row['id']; ?>">
-                                <button type="submit" class="select-button">Select</button>
+                                <button type="submit" name="remove_package" class="remove-btn">Remove</button>
                             </form>
                         </td>
                     </tr>
                 <?php endwhile; ?>
             <?php else: ?>
-                <tr><td colspan="8">No packages available.</td></tr>
+                <tr><td colspan="8">You have not availed any packages yet.</td></tr>
             <?php endif; ?>
         </table>
     </div>
@@ -209,10 +229,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const mainContent = document.getElementById('main-content');
+            const sidebarToggle = document.querySelector('.sidebar-toggle');
+
             sidebar.classList.toggle('active');
             mainContent.classList.toggle('active');
+
+            if (sidebar.classList.contains('active')) {
+                gsap.to(sidebar, { left: 0, duration: 0.5 });
+                gsap.to(sidebarToggle, { rotate: 180, duration: 0.3 });
+            } else {
+                gsap.to(sidebar, { left: '-250px', duration: 0.5 });
+                gsap.to(sidebarToggle, { rotate: 0, duration: 0.3 });
+            }
         }
+
+        gsap.from('.sidebar', { x: -250, opacity: 0, duration: 1 });
+        gsap.from('.main', { x: 100, opacity: 0, duration: 1 });
     </script>
 
 </body>
 </html>
+
+<?php
+$stmt->close();
+$conn->close();
+?>
