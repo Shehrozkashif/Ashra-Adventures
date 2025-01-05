@@ -12,13 +12,13 @@ function About() {
         <div className="w-full flex gap-5 border-t-[1px] pt-10 mt-20 border-[#a1b562]">
             <div className="w-1/2">
             <h1 className="text-7xl"> Our Approach: </h1>
-            <a href="about_us.html">
+            <a href="html/about_us.html">
             <button className="flex uppercase gap-10 items-center px-10 py-6 bg-zinc-900 mt-10 rounded-full text-white">Read More
             <div classname="w-2 h-2 bg-zinc-100 rounded-full"></div>
             </button> </a> </div>
             <img
             className="rounded-lg overflow-hidden w-full h-full object-cover"
-            src="iima.jpeg"
+            src="images/iima.jpeg"
             alt="img"
           /></div>
         </div>

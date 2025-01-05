@@ -48,7 +48,7 @@ function Featured() {
           </h1>
           <img
             className="rounded-lg overflow-hidden w-full h-full object-cover"
-            src="images.jpg"
+            src="images/images.jpg"
             alt="img"
           />
         </motion.div>
@@ -72,7 +72,7 @@ function Featured() {
           </h1>
           <img
             className="rounded-lg overflow-hidden w-full h-full object-cover"
-            src="Imgg.jpg"
+            src="images/Imgg.jpg"
             alt="img"
           />
         </motion.div>
@@ -98,7 +98,7 @@ function Featured() {
           </h1>
           <img
             className="rounded-lg overflow-hidden w-full h-full object-cover"
-            src="ima.webp"
+            src="images/ima.webp"
             alt="img"
           />
         </motion.div>
@@ -122,7 +122,7 @@ function Featured() {
           </h1>
           <img
             className="rounded-lg overflow-hidden w-full h-full object-cover"
-            src="imag.webp"
+            src="images/imag.webp"
             alt="img"
           />
         </motion.div>

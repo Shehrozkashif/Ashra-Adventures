@@ -72,7 +72,7 @@ function Cards() {
         <div className="card relative rounded-xl w-full h-full bg-[#004D43] flex items-center justify-center">
           
           {!showAboutUs1 ? (
-            <img className="w-32 transition-all duration-500" src="logo.png" alt="Logo" />
+            <img className="w-32 transition-all duration-500" src="images/logo.png" alt="Logo" />
           ) : (
             <div className="about-us-text1 absolute top-0 left-0 w-full h-full flex items-center justify-center text-white">
               <p className="text-center p-5">
@@ -94,7 +94,7 @@ function Cards() {
         <div className="card relative rounded-xl w-1/2 h-full bg-[#192826] flex items-center justify-center">
          
           {!showAboutUs2 ? (
-            <img className="w-32 transition-all duration-500" src="logo.png" alt="Logo" />
+            <img className="w-32 transition-all duration-500" src="images/logo.png" alt="Logo" />
           ) : (
             <div className="about-us-text2 absolute top-0 left-0 w-full h-full flex items-center justify-center text-white">
               <p className="text-center p-5">
@@ -114,7 +114,7 @@ function Cards() {
         <div className="card relative rounded-xl w-1/2 h-full bg-[#192826] flex items-center justify-center">
          
           {!showAboutUs3 ? (
-            <img className="w-32 transition-all duration-500" src="logo.png" alt="Logo" />
+            <img className="w-32 transition-all duration-500" src="images/logo.png" alt="Logo" />
           ) : (
             <div className="about-us-text3 absolute top-0 left-0 w-full h-full flex items-center justify-center text-white">
               <p className="text-center p-5">

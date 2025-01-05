@@ -38,7 +38,7 @@ function LandingPage() {
 
        
         <div className="start flex items-center gap-2">
-        <a href="login.html">
+        <a href="http://localhost/ashra/php/login.php">
           <div className="px-4 py-1 border-[1px] border-zinc-400 font-light text-sm uppercase rounded-full flex items-center">
             Start the Trip
             <div className="w-8 h-8 flex items-center justify-center border-[2px] border-zinc-500 rounded-full ml-2">
